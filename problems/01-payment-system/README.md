@@ -100,6 +100,29 @@ High-level module depends on abstraction, not details.
 
 ---
 
+### Step 4: Added New Payment Without Modifying Existing Code
+
+We introduced a new class:
+
+```
+WalletPayment implements Payment
+```
+
+No existing classes were modified.
+
+#### Result
+
+✅ Successfully validated **Open/Closed Principle (OCP)**
+✅ System behavior extended via polymorphism.
+✅ Existing tested code remained untouched (low risk change).
+
+---
+
+### Key Learning
+
+Good design allows new features to be added by **writing new code**, not editing old code.
+
+
 ### Current Status
 
 System is now:
