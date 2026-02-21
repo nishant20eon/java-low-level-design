@@ -1,0 +1,47 @@
+@startuml
+
+class Order {
+  - id: int
+  - amount: double
+  + getId()
+  + getAmount()
+}
+
+interface PaymentMethod {
+  + pay(Order)
+}
+
+class UpiPayment
+class CardPayment
+
+PaymentMethod <|.. UpiPayment
+PaymentMethod <|.. CardPayment
+
+interface OrderRepository {
+  + save(Order)
+}
+
+class MySQLOrderRepository
+
+OrderRepository <|.. MySQLOrderRepository
+
+interface NotificationService {
+  + notifyUser(Order)
+}
+
+class EmailNotificationService
+
+NotificationService <|.. EmailNotificationService
+
+class OrderService {
+  - paymentMethod: PaymentMethod
+  - orderRepository: OrderRepository
+  - notificationService: NotificationService
+  + createOrder(Order)
+}
+
+OrderService --> PaymentMethod
+OrderService --> OrderRepository
+OrderService --> NotificationService
+
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+
+actor Client
+
+Client -> OrderService : createOrder(order)
+OrderService -> OrderService : validate(order)
+OrderService -> PaymentMethod : pay(order)
+OrderService -> OrderRepository : save(order)
+OrderService -> NotificationService : notifyUser(order)
+
+@enduml
