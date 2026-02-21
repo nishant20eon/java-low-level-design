@@ -1,5 +1,18 @@
+# Compiled output
 /bin/
-/.settings/
-/.project
-.classpath
+out/
 *.class
+
+# Eclipse files
+.metadata/
+.settings/
+.project
+.classpath
+
+# IntelliJ files
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
