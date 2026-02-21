@@ -1,4 +1,4 @@
-package com.llm.order.bad;
+package com.lld.order.bad;
 
 public class OrderService {
 
