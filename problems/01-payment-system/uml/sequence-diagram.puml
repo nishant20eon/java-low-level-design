@@ -1,0 +1,33 @@
+@startuml
+
+actor Client
+
+participant PaymentService
+participant PaymentMethod
+participant PaymentRepository
+participant NotificationService
+
+Client -> PaymentService : processPayment(payment)
+activate PaymentService
+
+PaymentService -> PaymentService : validate(payment)
+
+PaymentService -> PaymentMethod : pay(payment)
+activate PaymentMethod
+PaymentMethod --> PaymentService : success
+deactivate PaymentMethod
+
+PaymentService -> PaymentRepository : save(payment)
+activate PaymentRepository
+PaymentRepository --> PaymentService : saved
+deactivate PaymentRepository
+
+PaymentService -> NotificationService : notifyUser(payment)
+activate NotificationService
+NotificationService --> PaymentService : notified
+deactivate NotificationService
+
+PaymentService --> Client : paymentProcessed
+deactivate PaymentService
+
+@enduml

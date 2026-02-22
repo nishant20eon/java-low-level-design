@@ -1,133 +1,75 @@
-## Problem: Payment Processing System
+# 01 - Payment System (Bad vs Good Design)
 
-We need to design a system that can process different types of payments.
+## Overview
 
-### Supported Payments (Initial Version)
+This module demonstrates:
 
-* Credit Card
-* Debit Card
-* UPI
+1.  BAD Design (Monolithic, tightly coupled)
+2.  GOOD Design (SOLID-based clean architecture)
 
-### Requirements
+The goal is to understand how poor design leads to rigid systems and how
+applying SOLID principles improves maintainability and scalability.
 
-1. A user should be able to make a payment using any method.
-2. The system should print confirmation of the payment.
-3. In future, we must support new payment types like:
+------------------------------------------------------------------------
 
-   * Wallet
-   * NetBanking
-   * Crypto
-4. Adding new payment types should NOT break existing code.
+# BAD DESIGN
 
-### Goal
+## Characteristics
 
-Design this system using SOLID principles so it is easy to extend.
+-   One large PaymentService class
+-   If-else payment handling
+-   Hardcoded database logic
+-   Hardcoded notification logic
+-   No abstraction
+-   No dependency injection
 
-## Design Evolution — Payment System
+## SOLID Violations
 
-### Step 1: Initial Naive Design
+Principle     Violation
+  ------------- ---------------------------------------------------------
+SRP           One class handles validation, payment, DB, notification
+OCP           Adding new payment requires modifying class
+DIP           Direct dependency on MySQL and Email
+Testability   Cannot mock dependencies
 
-We started with a single `PaymentProcessor` class:
+------------------------------------------------------------------------
 
-* Used `if-else` to decide payment type.
-* Contained all business logic.
-* Looked simple but had serious design issues.
+# GOOD DESIGN
 
-#### Problems Identified
+## Architecture Components
 
-1. **Violates Single Responsibility Principle (SRP)**
+-   Payment (Model)
+-   PaymentMethod (Strategy Pattern)
+-   PaymentRepository (Persistence abstraction)
+-   NotificationService (Communication abstraction)
+-   PaymentService (Orchestrator)
 
-   * `PaymentProcessor` was deciding type AND executing payment logic.
+## SOLID Applied
 
-2. **Violates Open/Closed Principle (OCP)**
+Principle   Where Applied
+  ----------- --------------------------------------
+SRP         Each class has single responsibility
+OCP         New payment types via strategy
+LSP         All payment methods interchangeable
+ISP         Small focused interfaces
+DIP         Constructor injection
 
-   * Adding a new payment (e.g., Wallet) required modifying the class.
-   * This risks breaking existing functionality.
+------------------------------------------------------------------------
 
-3. **Hardcoded Behavior**
+## Benefits
 
-   * Logic tightly coupled to string values like `"CREDIT"`.
+-   Easy to extend
+-   Easy to test
+-   Easy to change database
+-   Clean separation of concerns
+-   Interview-ready architecture
 
-4. **Not Scalable**
+------------------------------------------------------------------------
 
-   * With 10+ payment types, the class would become unmaintainable.
+## Interview Summary
 
----
-
-### Step 2: Refactoring Toward SOLID
-
-We introduced an abstraction:
-
-```
-Payment (interface)
-```
-
-Each payment type now implements its own behavior:
-
-* `CreditCardPayment`
-* `DebitCardPayment`
-* `UpiPayment`
-
-#### Improvements
-
-✅ Applied **Single Responsibility Principle**
-
-* Each class now has only one reason to change.
-
-✅ Behavior moved to polymorphic implementations.
-
-* Removed conditional complexity.
-
----
-
-### Step 3: Refactored Processor to Use Abstraction
-
-`PaymentProcessor` now depends on:
-
-```
-Payment interface instead of concrete classes
-```
-
-This means:
-
-* Processor does not know *how* payment happens.
-* It only triggers the behavior.
-
-#### Improvements
-
-✅ Applied **Dependency Inversion Principle (DIP)**
-High-level module depends on abstraction, not details.
-
----
-
-### Step 4: Added New Payment Without Modifying Existing Code
-
-We introduced a new class:
-
-```
-WalletPayment implements Payment
-```
-
-No existing classes were modified.
-
-#### Result
-
-✅ Successfully validated **Open/Closed Principle (OCP)**
-✅ System behavior extended via polymorphism.
-✅ Existing tested code remained untouched (low risk change).
-
----
-
-### Key Learning
-
-Good design allows new features to be added by **writing new code**, not editing old code.
-
-
-### Current Status
-
-System is now:
-
-* Extensible
-* Loosely coupled
-* Ready to support new payment methods without modification.
-
+"In the bad design, PaymentService was tightly coupled and violated
+multiple SOLID principles. I refactored using Strategy pattern for
+payment processing and introduced abstractions for repository and
+notification layers. Dependencies are injected via constructor, ensuring
+extensibility and maintainability."

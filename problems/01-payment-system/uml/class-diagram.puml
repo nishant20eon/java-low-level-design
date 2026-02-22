@@ -1,0 +1,47 @@
+@startuml
+
+class Payment {
+  - id: int
+  - amount: double
+  + getId(): int
+  + getAmount(): double
+}
+
+interface PaymentMethod {
+  + pay(payment: Payment): void
+}
+
+class UpiPayment
+class CardPayment
+class WalletPayment
+
+PaymentMethod <|.. UpiPayment
+PaymentMethod <|.. CardPayment
+PaymentMethod <|.. WalletPayment
+
+interface PaymentRepository {
+  + save(payment: Payment): void
+}
+
+class MySQLPaymentRepository
+PaymentRepository <|.. MySQLPaymentRepository
+
+interface NotificationService {
+  + notifyUser(payment: Payment): void
+}
+
+class EmailNotificationService
+NotificationService <|.. EmailNotificationService
+
+class PaymentService {
+  - paymentMethod: PaymentMethod
+  - paymentRepository: PaymentRepository
+  - notificationService: NotificationService
+  + processPayment(payment: Payment): void
+}
+
+PaymentService --> PaymentMethod
+PaymentService --> PaymentRepository
+PaymentService --> NotificationService
+
+@enduml
